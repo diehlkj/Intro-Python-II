@@ -19,4 +19,4 @@ class Room():
     def __str__(self):
         for i in self.inventory:
             print(f"{i.name}: {i.description}")
-        return f"{self.name}\n{self.description}\n"
+        return f"\n{self.name}\n{self.description}"
