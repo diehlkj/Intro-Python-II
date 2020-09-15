@@ -17,4 +17,6 @@ class Room():
     # def w_to(self):
         
     def __str__(self):
-        return f"{self.name}\n{self.description}\n{self.inventory}\n"
+        for i in self.inventory:
+            print(f"{i.name}: {i.description}")
+        return f"{self.name}\n{self.description}\n"

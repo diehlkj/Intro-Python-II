@@ -7,16 +7,20 @@ class Player():
         self.location = location
         self.inventory = inventory
     
-    # def move(self, direction):
-    #     if direction not in self.location.exists():
-    #         print("Can't move in that direction")
-    #         return
-    #     new_location = self.location.
-    
-    def getItem(self, item):
-        self.inventory.append(item)
+    def getItem(self, itemName):
+        if any(item.name.lower() == itemName for item in self.location.inventory):
+            # Gets specified item and appends it to room inv
+            toGet = [item for item in self.location.inventory if  item.name.lower() == itemName]
+            self.inventory.append(toGet[0])
+            
+            # Remakes inv list without specified item
+            self.location.inventory = [item for item in self.location.inventory if not item.name.lower() == itemName]
+            print(f"Added '{toGet[0].name}' to inventory.")
+            
+        else:
+            print(f"There is no '{itemName}' in the room")
         
-    def dropItem(self, item):
+    def dropItem(self, itemName):
         # ! Don't remove items from a list while enumerating over it.
         # ! This will cause some items to be skipped. Instead, rebuild the list minus item.
         # ? https://docs.python.org/2/tutorial/datastructures.html#list-comprehensions
@@ -24,16 +28,17 @@ class Player():
         # * The remove() method will remove the first instance of a value in a list.
         # ? any() method https://stackoverflow.com/questions/9371114/check-if-list-of-objects-contain-an-object-with-a-certain-attribute-value
         
-        if any(x.name.lower() == item for x in self.inventory):
+        if any(item.name.lower() == itemName for item in self.inventory):
             # Gets specified item and appends it to room inv
-            toDrop = [thing for thing in self.inventory if  thing.name.lower() == item]
-            # Remakes inv list without specified item
-            self.inventory = [thing for thing in self.inventory if not thing.name.lower() == item]
-            print(f"Dropped '{item}' from inventory.")
+            toDrop = [item for item in self.inventory if  item.name.lower() == itemName]
+            self.location.inventory.append(toDrop[0])
             
-            return toDrop
+            # Remakes inv list without specified item
+            self.inventory = [item for item in self.inventory if not item.name.lower() == itemName]
+            print(f"Dropped '{toDrop[0].name}' from inventory.")
+            
         else:
-            print(f"You dont have '{item}' in inventory")
+            print(f"You dont have '{itemName}' in inventory")
     
     def __str__(self):
         return f"Name: {self.name}\nLocation: {self.location}\n"

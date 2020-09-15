@@ -4,6 +4,9 @@ class Item():
         self.description = description
         self.value = value
         self.iType = iType
+        
+    def __str__(self):
+        return f"{self.name}\n{self.description}\n{self.value}\n"
 
 class Weapon(Item):
     def __init__(self, name, description, value, iType, damage):
