@@ -1,6 +1,7 @@
 import sys
 from room import Room
 from player import Player
+from items import Item, Weapon
 
 # Declare all the rooms
 
@@ -60,7 +61,7 @@ room['treasure'].s_to = room['narrow']
 
 # Make a new player object that is currently in the 'outside' room.
 
-print(room['outside'].n_to.title)
+# print(room['outside'].n_to.title)
 
 # ? player = Player("Todd The", "outside")
 # ? print(player.location)
@@ -71,8 +72,12 @@ print(room['outside'].n_to.title)
 
 def tba():
     cardinal = {"n", "e", "s", "w"}
-    describe = {"describe", "description", "describe room", "room", "current room"}
-    player = Player("Todd The", "outside")
+    describe = {"describe", "description",
+                "describe room", "room", "current room"}
+    end = {"quit", "q", "end", "exit"}
+    inventory = {"inventory", "items", "bag", "inv"}
+    player = Player("Todd The", "outside", [Item("Torch", "Gives off a small ammount of light", 5, "utility"), Weapon(
+        "Dagger", "A crude dagger made of bronze. Its seen better days.", 15, "weapon", 5)])
     print(player)
 
     while True:
@@ -83,35 +88,58 @@ def tba():
         print(room[player.location])
 
         cmd = input(">>> ")
+        cmdSplit = cmd.split()
+        
+        if len(cmdSplit) > 1:
+            if cmdSplit[0].lower() == "get":
+                pass
+            
+            if cmdSplit[0].lower() == "drop":
+                room[player.location].inventory.append(player.dropItem(cmdSplit[1].lower()))
+                
+            if cmdSplit[0].lower() == "describe":
+                pass
+        else:
+            # ? Movement
+            if cmd.lower() in cardinal:
+                if cmd == "n":
+                    try:
+                        player.location = room[player.location].n_to.title
+                    except AttributeError:
+                        print("Cannot move in that direction.")
+                if cmd == "e":
+                    try:
+                        player.location = room[player.location].e_to.title
+                    except AttributeError:
+                        print("Cannot move in that direction.")
+                if cmd == "s":
+                    try:
+                        player.location = room[player.location].s_to.title
+                    except AttributeError:
+                        print("Cannot move in that direction.")
+                if cmd == "w":
+                    try:
+                        player.location = room[player.location].w_to.title
+                    except AttributeError:
+                        print("Cannot move in that direction.")
 
-        if cmd.lower() in cardinal:            
-            if cmd == "n":
-                try:
-                    player.location = room[player.location].n_to.title
-                except AttributeError:
-                    print("Cannot move in that direction.")
-            if cmd == "e":
-                try:
-                    player.location = room[player.location].e_to.title
-                except AttributeError:
-                    print("Cannot move in that direction.")
-            if cmd == "s":
-                try:
-                    player.location = room[player.location].s_to.title
-                except AttributeError:
-                    print("Cannot move in that direction.")
-            if cmd == "w":
-                try:
-                    player.location = room[player.location].w_to.title
-                except AttributeError:
-                    print("Cannot move in that direction.")
-        
-        if cmd in describe:
-            print(room[player.location])
-        
-        if cmd in {"q", "Q"}:
-            print("\nThanks for playing\n")
-            break
+            if cmd.lower() in describe:
+                print(room[player.location])
+
+            if cmd.lower() in inventory:
+                for count, item in enumerate(player.inventory):
+                    print(f"{count}: {item.name}")
+
+            # if cmd.lower() in {"drop"}:
+            #     print("What item do you want to drop?\n")
+            #     for count, item in enumerate(player.inventory):
+            #         print(f"{count}: {item.name}")
+            #     toDrop = input("Item name >>> ")
+            #     player.dropItem(toDrop)
+            
+            if cmd.lower() in end:
+                print("\nThanks for playing\n")
+                break
 
 
         #
